@@ -41,6 +41,8 @@ router.post(`/`, async (req, res) => {
 
 //retrieving a product from the database
 router.get(`/`, async (req, res) => {
+
+    //this piece of code helps us to find products based on a specific category. Basically filtering using category
     let filter = {}
         if(req.query.categories){
             filter = {category:req.query.categories.split(',')}

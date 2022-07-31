@@ -66,6 +66,8 @@ const productSchema = mongoose.Schema({
    
 })
 
+
+//this enables us to get the id in the  right format
 productSchema.virtual('id').get(function() {
     return this._id.toHexString();
 })

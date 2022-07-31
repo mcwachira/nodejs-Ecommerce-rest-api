@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const cors = require('cors')
 require('dotenv').config()
 
+const authJwt = require('./helpers/jwt')
+const errorHandling = require('./helpers/error-handling')
 const app = express();
 
 app.use(cors())
@@ -24,14 +26,17 @@ const Category = require('./models/category')
 //import myRouter
 const productRouter = require('./routers/product')
 const categoryRouter = require('./routers/categories')
-
+const userCategory = require('./routers/user')
 //middleware
-app.use(bodyParser.json())
-app.use(morgan('tiny'))
+app.use(bodyParser.json()) //for getting data from our req.body
+app.use(morgan('tiny')) //used to log request from the frontend
+app.use(authJwt()) //for route protection
+// app.use(errorHandling)// for handling errors
 
 //routers
 app.use(`${api}/products`, productRouter)
 app.use(`${api}/categories`, categoryRouter)
+app.use(`${api}/users`, userCategory)
 
 
 //database connection promise
