@@ -26,7 +26,8 @@ const Category = require('./models/category')
 //import myRouter
 const productRouter = require('./routers/product')
 const categoryRouter = require('./routers/categories')
-const userCategory = require('./routers/user')
+const userRouter = require('./routers/user')
+const orderRouter = require('./routers/order')
 //middleware
 app.use(bodyParser.json()) //for getting data from our req.body
 app.use(morgan('tiny')) //used to log request from the frontend
@@ -36,7 +37,8 @@ app.use(authJwt()) //for route protection
 //routers
 app.use(`${api}/products`, productRouter)
 app.use(`${api}/categories`, categoryRouter)
-app.use(`${api}/users`, userCategory)
+app.use(`${api}/users`, userRouter)
+app.use(`${api}/orders`, orderRouter)
 
 
 //database connection promise
