@@ -40,6 +40,9 @@ app.use(`${api}/categories`, categoryRouter)
 app.use(`${api}/users`, userRouter)
 app.use(`${api}/orders`, orderRouter)
 
+//making our image files static
+app.use('/public/uploads', express.static(__dirname + '/public/uploads'))
+
 
 //database connection promise
 mongoose.connect(mongoDatabase, {

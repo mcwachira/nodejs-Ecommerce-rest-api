@@ -16,9 +16,10 @@ const  authJwt = () => {
     }).unless({
         path:[
              //enables me to view products without being authenticated
-             {url:'/\/api\/v1\/products(.*)/', methods:['GET', 'OPTIONS']},
+             {url:/\/public\/uploads(.*)/, methods:['GET', 'OPTIONS']},
+            { url: /\/api\/v1\/products(.*)/, methods: ['GET', 'OPTIONS'] },
               //enables me to view categories  without being authenticated
-            { url: '/\/api\/v1\/categories(.*)/', methods: ['GET', 'OPTIONS'] },// (https://regex101.com/)
+            { url: /\/api\/v1\/categories(.*)/, methods: ['GET', 'OPTIONS'] },// (https://regex101.com/)
             "/api/v1/users/login",
             "/api/v1/users/register",
           
