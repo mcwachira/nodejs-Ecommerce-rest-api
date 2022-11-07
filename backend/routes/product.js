@@ -1,44 +1,56 @@
 const Product = require('../models/product')
+const Category = require('../models/category')
+const mongoose = require('mongoose')
+const { createProduct,
+    fetchAllProducts,
+    fetchProductById,
+    updateProduct,
+    deleteProduct,
+    totalProducts,
+    fetchFeaturedProducts,
+    fetchProductByCategory } = require('../controllers/productController')
 
 
 const express = require('express')
 const router = express.Router()
 
-
-router.get('/', async(req, res) => {
-
-    const productList =await  Product.find()
-    
-    if(!productList){
-        res.status(500).json({'Success': false})
-    }
+//creating a new product
+router.post('/', createProduct  )
 
 
-    res.send(productList)
-})
 
-router.post('/', async (req, res) => {
- const product = new Product({
-     name: req.body.name,
-     image: req.body.image,
-     countInStock: req.body.countInStock,
-     brand: req.body.brand,
-    price:req.body.price,
-  category:req.body.category,
-    rating:req.body.rating,
-numReviews:req.body.numReviews,
-isFeatured:req.body.isFeatured,
-
- })
+    //fetching all the products
+router.get('/',fetchAllProducts )
 
 
- product = await product.save()
+//fetching an individual product
+router.get(`/:id`,fetchProductById)
 
- if(!product){
-    res.status(500).json({success: false})
- }
 
- res.send(product)
-})
+//updating a product
+router.put(`/:id`,updateProduct)
 
-    module.exports = router;
+
+//delete a product 
+router.delete(`/:id`, deleteProduct)
+
+//get number of all products
+
+
+router.get('/get/count',totalProducts)
+
+
+//get featured products
+//filter the featured product byb the count
+router.get('/get/featured/count', fetchFeaturedProducts)
+
+
+
+
+//filter the products by category
+
+//get featured products
+//filter the featured product by Category
+router.get('/get/:categoryId',fetchProductByCategory)
+
+module.exports = router;
