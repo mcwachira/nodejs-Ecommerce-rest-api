@@ -5,18 +5,18 @@ const jwt  = require('jsonwebtoken')
 
 const createUser = async (req, res) => {
 
-    let  user = User.findOne({email: req.body.email})
+    // let  user = User.findOne({email: req.body.email})
 
-    if (user){
-        return res.status(401).json(
-            {
-                message: 'User with that email exist',
+    // if (user){
+    //     return res.status(401).json(
+    //         {
+    //             message: 'User with that email exist',
                 
-            })
-    }
+    //         })
+    // }
     
  
-  user = new User({
+ const user = new User({
         name: req.body.name,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10),
@@ -50,7 +50,7 @@ const fetchAllUsers = async (req, res) => {
 
 
     try {
-        const UserList = await User.find().select('name, email, phone -password')
+        const UserList = await User.find().select('name email phone ')
 
 
         res.send(UserList)
@@ -71,7 +71,7 @@ const fetchUserById = async (req, res) => {
 
     const id = req.params.id;
 
-    const user = await User.findById(id).select('name, email, phone  -password')
+    const user = await User.findById(id).select('name email phone ')
 
     if (!user) {
         res.status(400).json(
@@ -142,6 +142,36 @@ const deleteUser = async (req, res) => {
 }
 
 
+    
+
+//register user
+const registerUser =  async (req, res) => {
+    let user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 10),
+        phone: req.body.phone,
+        isAdmin: req.body.isAdmin,
+        street: req.body.street,
+        apartment: req.body.apartment,
+        zip: req.body.zip,
+        city: req.body.city,
+        country: req.body.country,
+    })
+    user = await user.save();
+
+    if (!user)
+        return res.status(400).send('the user cannot be created!')
+
+    res.send(user);
+}
+
+
+
+
+
+
+//user login
 const userLogin = async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
     const secret = process.env.JWT_SECRET;
@@ -152,7 +182,8 @@ const userLogin = async (req, res) => {
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
         const token = jwt.sign(
             {
-                userId: user.id,
+         
+                userId:user.id,
                 isAdmin: user.isAdmin
             },
             secret,
@@ -167,6 +198,23 @@ const userLogin = async (req, res) => {
 }
 
 
+const numberOfUsers = async(req, res) => {
+    try {
+        const userCount = await User.countDocuments()
+        res.status(201).send({ count: userCount })
+        console.log(userCount)
+
+    } catch (error) {
+
+        res.status(400).json({
+            message: 'cannot get number of users',
+            error: error.message
+
+        })
+
+    }
+}
+
 module.exports = {
     createUser,
     fetchAllUsers,
@@ -174,6 +222,8 @@ module.exports = {
     updateUser,
     deleteUser,
     userLogin,
+    registerUser,
+    numberOfUsers
    
 
 }

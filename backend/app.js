@@ -8,6 +8,7 @@ const connectDb = require('./config/db')
 const productRoute = require('./routes/product')
 const categoryRoute=require('./routes/category')
 const authJwt = require('./middleware/jwt')
+const errorHandler = require('./middleware/errorHandler')
 
 app.use(cors())
 // app.options('*', cors( ))
@@ -26,7 +27,8 @@ app.use(
 app.use(express.json());
 //app.use(bodyParser.json()) //for getting data from our req.body
 app.use(morgan('tiny')) //used to log request from the frontend
-// app.use(errorHandling)// for handling errors
+app.use(authJwt()) //protect  our routes
+app.use(errorHandler)// for handling errors
 
 
 //import my model

@@ -7,7 +7,9 @@ const { createUser,
     fetchUserById,
     updateUser,
     deleteUser,
-    userLogin
+    userLogin,
+    registerUser,
+    numberOfUsers
     } = require('../controllers/userController')
 
 
@@ -35,8 +37,14 @@ router.put(`/:id`, updateUser)
 router.delete(`/:id`, deleteUser)
 
 
+//register user
+router.post('/register',registerUser)
+
 
 //login user
 router.post('/login', userLogin)
+
+//total user
+router.post('/get/count', numberOfUsers)
 
 module.exports = router;
