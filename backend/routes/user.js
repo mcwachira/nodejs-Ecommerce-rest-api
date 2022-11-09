@@ -45,6 +45,6 @@ router.post('/register',registerUser)
 router.post('/login', userLogin)
 
 //total user
-router.post('/get/count', numberOfUsers)
+router.get('/get/count', numberOfUsers)
 
 module.exports = router;

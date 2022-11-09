@@ -40,7 +40,7 @@ const User= require('./models/user')
 const productRouter = require('./routes/product')
 const categoryRouter = require('./routes/category')
 const userRouter = require('./routes/user')
-//const orderRouter = require('./routes/order')
+const orderRouter = require('./routes/orders')
 
 
 const api = process.env.API_URL
@@ -48,7 +48,7 @@ const api = process.env.API_URL
 app.use(`${api}/products`, productRouter)
 app.use(`${api}/categories`, categoryRouter)
 app.use(`${api}/users`, userRouter)
-//app.use(`${api}/orders`, orderRouter)
+app.use(`${api}/orders`, orderRouter)
 
 connectDb()
 const port = 5000;
