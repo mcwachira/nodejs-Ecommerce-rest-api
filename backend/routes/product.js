@@ -1,7 +1,8 @@
 const Product = require('../models/product')
 const Category = require('../models/category')
 const mongoose = require('mongoose')
-const { createProduct,
+const {protectedRoutes} = require('../middleware/authMiddleware')
+ const { createProduct,
     fetchAllProducts,
     fetchProductById,
     updateProduct,
