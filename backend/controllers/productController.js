@@ -1,12 +1,6 @@
 const Product = require('../models/product')
 const Category = require('../models/category')
 const mongoose = require('mongoose')
-const multer = require('multer')
-const storage = require('../middleware/imageUploads')
-
-const uploadOptions = multer({ storage: storage })
-
-
 
 const createProduct = async (req, res) => {
     const category = await Category.findById(req.body.category);
@@ -14,17 +8,11 @@ const createProduct = async (req, res) => {
     if (!category) {
         res.status(400).send('Category With that id does not exist')
     }
-
-    const file = req.file;
-    if (!file) return res.status(400).send('No image in the request');
-
-    const fileName = file.filename;
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
     const product = new Product({
         name: req.body.name,
         description: req.body.description,
         richDescription: req.body.richDescription,
-        image: `${basePath}${fileName}`, // "http://localhost:5000/public/upload/image-2323232"
+        image: req.body.image,
         brand: req.body.brand,
         price: req.body.price,
         category: req.body.category,
@@ -91,36 +79,12 @@ const fetchProductById = async (req, res) => {
     res.send(product)
 }
 
-
-//update product
 const updateProduct = async (req, res) => {
 
     //validating the id
     if (!mongoose.isValidObjectId(req.params.id)) {
         res.status(400).send('product id is invalid')
     }
-
-    //updating the image will require us to check if the product exist
-
-    const product = await Product.findById(req.params.id)
-    if (!product) {
-        res.status(401).json({ message: 'product with that id does not exist' })
-    } 
-
-
-    //check for the image file 
-const file = req.file
-  let  imagePath;
-if(file){
-
-    const fileName = file.filename;
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
-    imagePath = `${basePath}${fileName}`
-
-}else {
-imagePath = product.image
-}
-
 
 
     try {
@@ -129,7 +93,7 @@ imagePath = product.image
             name: req.body.name,
             description: req.body.description,
             richDescription: req.body.richDescription,
-            image: imagePath,
+            image: req.body.image,
             brand: req.body.brand,
             price: req.body.price,
             category: req.body.category,
@@ -156,62 +120,6 @@ imagePath = product.image
 
 }
 
-
-
-
-const updateProductImages = async (req, res) => {
-
-    //validating the id
-    if (!mongoose.isValidObjectId(req.params.id)) {
-        res.status(400).send('product id is invalid')
-    }
-
-    //updating the image will require us to check if the product exist
-
-    const product = await Product.findById(req.params.id)
-    if (!product) {
-        res.status(401).json({ message: 'product with that id does not exist' })
-    }
-
-
-    //check for the image file 
-    const files = req.files;
-    let imagesPaths = [];
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
-
-    if (files) {
-        files.map((file) => {
-            imagesPaths.push(`${basePath}${file.filename}`);
-        });
-    }
-
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(
-            req.params.id, {
-           
-            images: imagesPaths,
-          
-        }, {
-            new: true
-        })
-        res.json(updatedProduct)
-
-    } catch (error) {
-        res.status(400).json({
-            message: 'updating the product  failed',
-            error: error.message
-
-        })
-    }
-
-
-
-
-}
-
-
-
-//delete product
 const deleteProduct = async (req, res) => {
 
 
@@ -234,42 +142,6 @@ const deleteProduct = async (req, res) => {
 
 }
 
-const totalProducts = async (req, res) => {
-
-    try {
-        const productCount = await Product.countDocuments()
-        res.status(201).send({ count: productCount })
-        console.log(productCount)
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: 'cannot get number of products',
-            error: error.message
-
-        })
-
-    }
-}
-
-const fetchFeaturedProducts = async (req, res) => {
-
-    const count = req.params.count ? req.params.count : 0
-    try {
-        const featuredProduct = await Product.find({ isFeatured: true }).limit(+count)
-        res.status(201).json({ featured: featuredProduct })
-        console.log(featuredProduct)
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: 'cannot get featured products',
-            error: error.message
-
-        })
-
-    }
-}
 
 
 const fetchProductByCategory = async (req, res) => {
@@ -298,10 +170,7 @@ module.exports = {
     fetchAllProducts,
     fetchProductById,
     updateProduct,
-    updateProductImages,
     deleteProduct,
-    totalProducts,
-    fetchFeaturedProducts,
     fetchProductByCategory
 
 }

@@ -21,16 +21,14 @@ app.use(morgan('tiny')) //used to log request from the frontend
 //import myRouter
 const productRouter = require('./routes/product')
 const categoryRouter = require('./routes/category')
-const userRouter = require('./routes/user')
-const orderRouter = require('./routes/orders')
+
 
 
 const api = process.env.API_URL
 //routers
 app.use('/products', productRouter)
 app.use('/categories', categoryRouter)
-app.use('/users', userRouter)
-app.use('/orders', orderRouter)
+
 
 connectDb()
 const port = 5000;
