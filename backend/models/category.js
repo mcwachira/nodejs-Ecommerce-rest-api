@@ -20,11 +20,5 @@ const categorySchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-categorySchema.virtual("id").get(function () {
-    return this._id.toHexString();
-})
-categorySchema.set('toJSON', {
-    virtuals:true,
-})
 module.exports = mongoose.model('Category', categorySchema)
 

@@ -1,11 +1,20 @@
 const Product = require('../models/product')
 const Category = require('../models/category')
 const mongoose = require('mongoose')
+
+const multer = require('multer')
+const storage = require('../middleware/imageUploads')
+
+const uploadOptions = multer({ storage: storage })
+
+
+
 const {protectedRoutes} = require('../middleware/authMiddleware')
  const { createProduct,
     fetchAllProducts,
     fetchProductById,
     updateProduct,
+     updateProductImages,
     deleteProduct,
     totalProducts,
     fetchFeaturedProducts,
@@ -16,7 +25,7 @@ const express = require('express')
 const router = express.Router()
 
 //creating a new product
-router.post('/', createProduct  )
+router.post('/',uploadOptions.single('image'), createProduct  )
 
 
 
@@ -25,11 +34,19 @@ router.get('/',fetchAllProducts )
 
 
 //fetching an individual product
+
+//get featured products
+//filter the featured product byb the count
+router.get('/get/featured/count', fetchFeaturedProducts)
+
+
+
+
 router.get(`/:id`,fetchProductById)
 
 
 //updating a product
-router.put(`/:id`,updateProduct)
+router.put(`/:id`, uploadOptions.single('image'), updateProduct)
 
 
 //delete a product 
@@ -53,5 +70,9 @@ router.get('/get/featured/count', fetchFeaturedProducts)
 //get featured products
 //filter the featured product by Category
 router.get('/get/:categoryId',fetchProductByCategory)
+
+
+//adding multiple images
+router.put('/gallery-images/:id', uploadOptions.array('images', 10), updateProductImages)
 
 module.exports = router;
