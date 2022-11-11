@@ -14,7 +14,7 @@ router.get('/:id', fetchCategoryById)
 
 
 
-router.post('/',)
+router.post('/',createCategory)
 
 
 router.put('/:id', updateCategory)
